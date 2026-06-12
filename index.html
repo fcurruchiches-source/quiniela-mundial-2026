@@ -394,7 +394,7 @@
 // ──────────────────────────────────────────────
 //  CONFIG — reemplaza con tu URL de Apps Script
 // ──────────────────────────────────────────────
-const API = "https://script.google.com/macros/s/AKfycbz5kzAZp9oPueR0Uq2EOHsBbpTB4izuqsx5s1kqtEJI9Q6BbbPOqOHvdtocK-ctnw43iw/exec";
+const API = "https://script.google.com/macros/s/AKfycbzHMhkwAL-FzEjanYN50YOR4I7qBYYOp71LPeBiuss0D4O96h4FdM6fVvx5on5tpeZ8ww/exec";
 
 // ──────────────────────────────────────────────
 //  Estado global
@@ -426,14 +426,17 @@ function showTab(name) {
 // ──────────────────────────────────────────────
 async function apiFetch(params) {
   const url = API + '?' + new URLSearchParams(params);
-  const r = await fetch(url);
+  const r = await fetch(url, { redirect: 'follow' });
   return r.json();
 }
 async function apiPost(body) {
+  // Apps Script requiere form-encoded para POST cross-origin
+  const params = new URLSearchParams();
+  params.append('payload', JSON.stringify(body));
   const r = await fetch(API, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: params,
+    redirect: 'follow'
   });
   return r.json();
 }
